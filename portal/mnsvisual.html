@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+<title>M&S Visualizer</title>
+<meta charset="iso-8859-1">
+<link rel="shortcut icon" href="./img/logo.ico" />
+<link rel="apple-touch-icon-precomposed" href="./img/logo.ico" />
+<link rel="stylesheet" href="css/layout.css" type="text/css">
+<!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
+    <style>
+      #map{
+       padding: 0;
+        margin: 0;
+      	margin-bottom: 20px;
+	      width: 100%;
+        height: 700px;
+       border: solid;
+      }
+      iframe{
+        padding: 0;
+        margin: 0;
+        margin-bottom: 20px;
+        width: 100%;
+        height: 800px;
+       border: solid;
+      }
+    </style>
+    <script src="http://js.arcgis.com/3.8/"></script>
+    
+    <script>
+      dojo.require("esri.map");
+      var layer, map, visible = [];
+
+      function init() {
+        //Use the ImageParameters to set the visible layers in the map service during ArcGISDynamicMapServiceLayer construction.
+        var imageParameters = new esri.layers.ImageParameters();
+	imageParameters.layerIds = [2];
+        imageParameters.layerOption = esri.layers.ImageParameters.LAYER_OPTION_SHOW;
+	
+	// Add dynamic map with topographic basemap
+	map = new esri.Map("map", {
+          basemap: "topo",
+          center: [-77.291994, 38.854681],
+          zoom: 8
+        });
+
+	// Add services
+        layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://129.2.24.54:6080/arcgis/rest/services/GEOG677_W2013/GEOG677_PatrickLolaAmani_Lab3/MapServer?", {"imageParameters":imageParameters});
+        map.addLayer(layer);
+      }
+      // Function to Toggle Layer visibility
+      function updateLayerVisibility() {
+        var inputs = dojo.query(".list_item"), input;
+        //in this application layer 2 is always on.
+        visible = [2];
+        for (var i=0, il=inputs.length; i<il; i++) {
+          if (inputs[i].checked) {
+            visible.push(inputs[i].id);
+          }
+        }
+         //if there aren't any layers visible set the array value to = -1
+        if(visible.length === 0){
+          visible.push(-1);
+        }
+        layer.setVisibleLayers(visible);
+      }
+
+      dojo.ready(init);
+    </script>    
+    
+</head>
+<body id="top">
+
+<div class="wrapper row0">
+  <header id="topbar" class="clear">
+    <script type="text/javascript">
+      var currentDate = new Date()
+      var day = currentDate.getDate()
+      var month = currentDate.getMonth() + 1
+      var year = currentDate.getFullYear()
+      document.write("<b>Today, " + month + "/" + day + "/" + year + "</b>")
+    </script>
+    <!--<form action="#" method="post">
+      <fieldset>
+        <legend>Search:</legend>
+        <input type="text" value="Search Our Website&hellip;" onFocus="this.value=(this.value=='Search Our Website&hellip;')? '' : this.value ;">
+        <input type="image" id="search" src="img/search.gif" alt="Search">
+      </fieldset>
+    </form>-->
+  </header>
+</div>
+<div class="wrapper row1">
+  <header id="header" class="clear">
+    <hgroup>
+      <h1><a href="#">Michael P Murphy</a></h1>
+      <h2>Geog677 Portal</h2>
+    </hgroup>
+    <nav>
+      <ul>
+        <li class="active"><a href="mnsvisual.html">M&S Visualizer</a></li>
+        <li><a href="assignments.html">Assignments</a>
+          <ul>
+            <li><a href="assignment1.html">Assignment 1</a></li>
+            <!--<li><a href="assignment2.html">Assignment 2</a></li>
+            <li><a href="assignment3.html">Assignment 3</a></li>
+            <li><a href="assignment4.html">Assignment 4</a></li>
+            <li><a href="assignment5.html">Assignment 5</a></li>
+            <li><a href="assignment6.html">Assignment 6</a></li>
+            <li><a href="assignment7.html">Assignment 7</a></li>
+            <li><a href="finalproject.html">Final Project</a></li>-->
+          </ul>
+        </li>
+        <li><a href="about.html">Profile</a></li>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+<!-- content -->
+<div class="wrapper row2">
+  <div id="container" class="clear">
+    <h1><span style="font-family: Arial; font-size: xx-large; color: #000000;">Modeling and Simulation (M&S) Viewer (Placeholder) </span> - <a href="assignment/GEOG677_Syllabus_Winter2018-2019.pdf" download="GEOG677_Syllabus_Winter2018-2019.pdf" target="_blank">(See Instructions)</a></h1>
+    <br>
+    <h2>Placeholder for Application Final Project</h2>
+    <!--
+    <h2>Part III: Publishing Map Services</h2>
+	    <p><a href="http://129.2.24.54:6080/arcgis/rest/services/GEOG677_W2013/GEOG677_PatrickLolaAmani_Lab3/MapServer?" target="_blank">Here is the link to the Map Services that we have created</a></p>
+	  <h2>Part IV: Consuming Map Services in Desktop GIS</h2>
+	    <p><a href="report/GEOG677_Patrick K Lola Amani_Assignment 3.pdf" download="GEOG677_Patrick K Lola Amani_Assignment 3.pdf" target="_blank">See the snapshot of the Map Document with services</a></p>
+	  <h2>Part V: Consuming Map Services in Web Applications</h2>
+	    <p>Check or uncheck the box to display or remove the layer from the map</p> <span id="layer_list"><input type='checkbox' class='list_item' id='0' value=0 onclick='updateLayerVisibility();'/>Maryland Highways  
+        <input type='checkbox' class='list_item' id='1' value=1 onclick='updateLayerVisibility();'/>Maryland Counties  
+        </span><br />
+        <br />
+      -->
+    <div id="map"></div>
+    
+  </div>
+</div>
+<!-- footer -->
+<div class="wrapper row3">
+    <footer id="footer" class="clear">
+      <p class="fl_left">&copy; Michael P. Murphy, El-Pigadore Enterprises</p>
+    </footer>
+  </div>
+</body>
+</html>
