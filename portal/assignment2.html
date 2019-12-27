@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <title>Lab 2</title>
+  <!--<meta charset="iso-8859-1">-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+  <link rel="shortcut icon" href="./img/logo.ico" />
+  <link rel="apple-touch-icon-precomposed" href="./img/logo.ico" />
+  <link rel="stylesheet" href="css/layout.css" type="text/css">
+  <!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
+<!-- Task 1 -->
+<style>
+  .mapDiv {
+    padding: 0;
+    margin: 0;
+     /*height: 100%;
+    width: 100%;*/
+    height: 600px;
+    width: 900px;
+  }
+
+</style>
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
+
+<script src="https://js.arcgis.com/4.10/"></script>
+
+<script>
+  require([
+    "esri/views/MapView",
+    "esri/widgets/LayerList",
+    "esri/widgets/Search",
+    "esri/widgets/Expand",
+    "esri/widgets/BasemapGallery",
+    "esri/WebMap"
+  ], function(
+    MapView, LayerList, Search, Expand, BasemapGallery, WebMap
+  ) {
+
+    var webmap = new WebMap({
+      portalItem: { // autocasts as new PortalItem()
+        id: "f2e9b762544945f390ca4ac3671cfa72"
+      }
+    });
+
+    var view = new MapView({
+      map: webmap,
+      container: "viewDiv"
+    });
+
+    view.when(function() {
+      var layerList = new LayerList({
+        view: view
+      });
+    
+    var searchWidget = new Search({
+      view: view
+    });
+
+    var basemapGallery = new BasemapGallery({
+      view: view,
+      container: document.createElement("div")
+    });
+    var bgExpand = new Expand({
+      view: view,
+      content: basemapGallery
+    });
+    
+    // close the expand whenever a basemap is selected
+    basemapGallery.watch("activeBasemap", function() {
+      var mobileSize = view.heightBreakpoint === "xsmall" || view.widthBreakpoint ===
+        "xsmall";
+
+      if (mobileSize) {
+        bgExpand.collapse();
+      }
+    });
+
+    // Add widget to the top right corner of the view
+    view.ui.add(layerList, "top-right");
+
+    // Add the search widget to the top right corner of the view
+    view.ui.add(searchWidget, {position: "top-right" });
+
+    // Add the expand instance to the ui
+    view.ui.add(bgExpand, "top-right");
+    });
+  });
+</script>
+
+
+
+</head>
+<body id="top">
+<div class="wrapper row0">
+    <header id="topbar" class="clear">
+      <script type="text/javascript">
+        var currentDate = new Date()
+        var day = currentDate.getDate()
+        var month = currentDate.getMonth() + 1
+        var year = currentDate.getFullYear()
+        document.write("<b>Today, " + month + "/" + day + "/" + year + "</b>")
+      </script>
+      <!--<form action="#" method="post">
+        <fieldset>
+          <legend>Search:</legend>
+          <input type="text" value="Search Our Website&hellip;" onFocus="this.value=(this.value=='Search Our Website&hellip;')? '' : this.value ;">
+          <input type="image" id="search" src="img/search.gif" alt="Search">
+        </fieldset>
+      </form>-->
+    </header>
+  </div>
+  <div class="wrapper row1">
+    <header id="header" class="clear">
+      <hgroup>
+        <h1><a href="#">Michael P Murphy</a></h1>
+        <h2>Geog677 Portal</h2>
+      </hgroup>
+      <nav>
+        <ul>
+          <li><a href="mnsvisual.html">M&S Visualizer</a></li>
+          <li class="active"><a href="assignments.html">Assignments</a>
+            <ul>
+                <li><a href="assignment1.html">Assignment 1</a></li>
+                <li><a href="assignment2.html">Assignment 2</a></li>
+                <li><a href="assignment3.html">Assignment 3</a></li>
+                <li><a href="assignment4.html">Assignment 4</a></li>
+                <li><a href="assignment5.html">Assignment 5</a></li>
+                <li><a href="assignment6.html">Assignment 6</a></li>
+                <!--<li><a href="assignment7.html">Assignment 7</a></li>-->
+                <li><a href="mnsvisual.html">Final Project</a></li>
+            </ul>
+          </li>
+          <li><a href="about.html">Profile</a></li>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+  </div>
+<!-- content -->
+<div class="wrapper row2">
+  <div id="container" class="clear">
+    <h2> Lab 2</h2>
+      <section class="services clear">
+        <article>
+        <h3> Task 1: Architecture Drawing</h3>
+          <img class="mapDiv" src="img/ArchDoc.jpg">
+        </article>
+      </section>   
+      <br /> 
+      <section class="services clear">
+        <article>
+        <h3> Task 2: ArcGIS Javascript 4.x API</h3>
+         <!-- <img src="img/global4.png"> -->
+          <div class="mapDiv" id="viewDiv"></div>
+        </article>
+      </section>
+      <br /> 
+      <section class="services clear">
+          <style>.embed-container {position: relative; height: 0; padding-bottom:80%; max-width: 100%;} .embed-container iframe, .embed-container object, .embed-container iframe{position: absolute; top: 0; left: 0; width: 100%; height: 100%;} small{position: absolute; z-index: 40; bottom: 0; margin-bottom: -15px;}</style><div class="embed-container"><iframe name="survey123webform" width="500" height="400" frameborder="0" marginheight="0" marginwidth="0" title="Test Real Estate Question" src="//survey123.arcgis.com/share/dc3b20580dfd40e8b095be54cfc3d43f?hide=navbar,header,footer,theme"></iframe></div><script>var survey123webform = document.getElementsByName('survey123webform')[0];window.addEventListener("message",e=>{if(e.data){var t=JSON.parse(e.data);"survey123:onFormLoaded"===t.event&&t.contentHeight&&(survey123webform.parentNode.style.height=t.contentHeight+"px")&&(survey123webform.parentNode.style["padding-bottom"]="unset")}});</script>
+        <h3> Task 3: ArcGIS Online Webmap</h3>
+          <a href="http://umdmpsgis.maps.arcgis.com/apps/webappviewer/index.html?id=b39243b616ae44b7a50054648fa9f806"><h4>Bel Air and Fallston Trails</h4></a>
+          
+          <!-- embedded map -->
+            <br />
+            <h4>Embedded Map (Viewable in portal only)</h4>
+            <style>
+              .embed-container {
+                position: relative; 
+                padding-bottom: 80%; 
+                height: 0; 
+                max-width: 100%;
+                height: 600px;
+                width: 900px;
+              } 
+              .embed-container iframe, .embed-container object, .embed-container iframe {
+                position: absolute; 
+                top: 0; 
+                left: 0; 
+                height: 600px;
+                width: 900px;
+              } 
+              small {
+                position: absolute; 
+                z-index: 40;
+                bottom: 0; 
+                margin-bottom: -15px;
+              }
+            </style>
+            <div class="embed-container" class="mapDiv">
+              <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" title="Bel Air and Fallston Trails" 
+              src="https://umdmpsgis.maps.arcgis.com/apps/Embed/index.html?webmap=ac39b14d34aa4892a1054925ff819093&extent=-76.5211,39.4502,-76.2676,39.565&zoom=true&previewImage=false&scale=true&legend=true&disable_scroll=true&theme=light"></iframe>
+            </div>
+            <h4>Embedded Map Survey123</h4>
+            <div class="embed-container" class="surveyDiv">
+              <iframe frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" title="Survey 123" 
+              src="https://survey123.arcgis.com/share/dc3b20580dfd40e8b095be54cfc3d43f"></iframe>
+            </div>
+            <h4>Embedded Map Operations Dashboard</h4>
+            <div class="embed-container" class="OperDashDiv">
+                <iframe frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" title="Operations Dashbaord" 
+                src="http://arcg.is/1TeLr80"></iframe>
+            </div>
+            <script>
+                var survey123webform = document.getElementsByName('survey123webform')[0];
+                window.addEventListener("message",e=>{
+                  if(e.data){
+                    var t=JSON.parse(e.data);
+                    "survey123:onFormLoaded"===t.event&&t.contentHeight&&(survey123webform.parentNode.style.height=t.contentHeight+"px")&&(survey123webform.parentNode.style["padding-bottom"]="unset";
+                    }
+                  }
+                );
+            </script>
+        </section>
+      <br /> 
+    
+  </div>
+</div>
+<!-- footer -->
+<div class="wrapper row3">
+    <footer id="footer" class="clear">
+      <p class="fl_left">&copy; Michael P. Murphy, El-Pigadore Enterprises</p>
+    </footer>
+  </div>
+</body>
+</html>

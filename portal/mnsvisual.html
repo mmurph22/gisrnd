@@ -3,21 +3,60 @@
 
 <head>
 <title>M&S Visualizer</title>
-<meta charset="iso-8859-1">
+
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link rel="shortcut icon" href="./img/logo.ico" />
 <link rel="apple-touch-icon-precomposed" href="./img/logo.ico" />
 <link rel="stylesheet" href="css/layout.css" type="text/css">
 <!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
-    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
+    <!--<link rel="stylesheet" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">-->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
     <style>
-      #map{
+      #viewDiv{
        padding: 0;
         margin: 0;
       	margin-bottom: 20px;
 	      width: 100%;
         height: 700px;
        border: solid;
+      }
+      #createSlideDiv {
+      background-color: white;
+      opacity: 0.9;
+      color: black;
+      padding: 6px;
+      }
+      #slidesDiv {
+        background-color: white;
+        opacity: 0.9;
+        color: black;
+        padding: 10px;
+        visibility: hidden;
+        bottom: 20px;
+        overflow-y: auto;
+        text-align: center;
+        height: 260px;
+      }
+
+      #slidesDiv .slide {
+        /* Show cursor as pointer when on a slide */
+        cursor: pointer;
+        margin-bottom: 6px;
+      }
+
+      #slidesDiv .slide .title {
+        /* Center the title text */
+        text-align: center;
+      }
+      /* Draw active slide with a nice border around the thumbnail */
+
+      #slidesDiv .slide.active img {
+        box-shadow: 0px 0px 12px black;
+        border-style: solid;
+        border-width: thin;
+        border-color: black;
       }
       iframe{
         padding: 0;
@@ -28,8 +67,172 @@
        border: solid;
       }
     </style>
-    <script src="http://js.arcgis.com/3.8/"></script>
-    
+
+    <script src="http://js.arcgis.com/4.10/"></script>
+    <script>
+      require([
+        "esri/views/SceneView",
+        "esri/WebScene",
+        "esri/webscene/Slide",
+
+        // Array shim for IE11
+        "@dojo/framework/shim/array"
+      ], function(
+        SceneView, WebScene, Slide, Array
+      ) {
+  
+    /*********************************************************************
+       * Create a new WebScene referencing a WebScene ID from ArcGIS Online
+       * or an on-premise portal.
+       *********************************************************************/
+       var scene = new WebScene({
+        portalItem: {  // autocasts as new PortalItem()
+          //id: "1c7a06421a314ac9b7d0fae22aa367fb" // example
+          id: "8f1175824bad42e9988db97e31c0438c" //My EW Scene
+        }
+      });
+
+      /*********************************************************************
+       * Reference the WebScene in a SceneView instance.
+       *********************************************************************/
+      var view = new SceneView({
+        map: scene,
+        container: "viewDiv"
+      });
+
+      view.ui.add(["createSlideDiv", "slidesDiv"], "top-right");
+
+      /*********************************************************************
+       * Function to create the UI for a slide by creating DOM nodes and
+       * adding them to the slidesDiv container.
+       *********************************************************************/
+      function createSlideUI(slide, placement) {
+        /*********************************************************************
+         * Create a new <div> element which contains all the slide information.
+         * Store a reference to the created DOM node so we can use it to place
+         * other DOM nodes and connect events.
+         *********************************************************************/
+        var slideElement = document.createElement("div");
+        // Assign the ID of the slide to the <span> element
+        slideElement.id = slide.id;
+        slideElement.classList.add("slide");
+
+        /*********************************************************************
+         * Place the newly created DOM node cat the beginning of the slidesDiv
+         *********************************************************************/
+        var slidesDiv = document.getElementById("slidesDiv");
+        if (placement === "first") {
+          slidesDiv.insertBefore(slideElement, slidesDiv.firstChild);
+        }
+        else {
+          slidesDiv.appendChild(slideElement);
+        }
+
+        /*********************************************************************
+         * Create a <div> element to contain the slide title text
+         *********************************************************************/
+        var title = document.createElement("div");
+        title.innerText = slide.title.text;
+        // Place the title of the slide in the <div> element
+        slideElement.appendChild(title);
+
+        /*********************************************************************
+         * Create a new <img> element and place it inside the newly created slide
+         * element. This will reference the thumbnail from the slide.
+         *********************************************************************/
+        var img = new Image();
+        // Set the src URL of the image to the thumbnail URL of the slide
+        img.src = slide.thumbnail.url;
+        // Set the title property of the image to the title of the slide
+        img.title = slide.title.text;
+        // Place the image inside the new <div> element
+        slideElement.appendChild(img);
+
+        /*********************************************************************
+         * Set up a click event handler on the newly created slide. When clicked,
+         * the code defined below will execute.
+         *********************************************************************/
+         slideElement.addEventListener("click", function() {
+          /*******************************************************************
+           * Remove the "active" class from all elements with the .slide class
+           *******************************************************************/
+          var slides = document.querySelectorAll(".slide");
+          Array.from(slides).forEach(function(node) {
+            node.classList.remove("active");
+          });
+
+          /*******************************************************************
+           * Add the "active" class on the current element being selected
+           *******************************************************************/
+          slideElement.classList.add("active");
+
+          /******************************************************************
+           * Applies a slide's settings to the SceneView.
+           *
+           * Each slide has a viewpoint and visibleLayers property that define
+           * the point of view or camera for the slide and the layers that should
+           * be visible to the user when the slide is selected. This method
+           * allows the user to animate to the given slide's viewpoint and turn
+           * on its visible layers and basemap layers in the view.
+           ******************************************************************/
+          slide.applyTo(view);
+        });
+      }
+
+        view.when(function() {
+        /*********************************************************************
+         * The slides will be placed in the 'slidesDiv' <div> element.
+         *********************************************************************/
+        document.getElementById("slidesDiv").style.visibility = "visible";
+
+        /*********************************************************************
+         * The slides are a collection inside the presentation property of
+         * the WebScene.
+         *********************************************************************/
+        var slides = scene.presentation.slides;
+
+        /*********************************************************************
+         * Loop through each slide in the collection and render the slide
+         *********************************************************************/
+        slides.forEach(createSlideUI);
+
+        /*********************************************************************
+         * Create a new slide using Slide.createFrom after clicking on the
+         * create slide button, using the text from the title input for the
+         * title of the slide.
+         *********************************************************************/
+         document.getElementById("createSlideButton").addEventListener("click", function() {
+          /*******************************************************************
+           * Use the Slide.createFrom static method to create a new slide which
+           * contains a snapshot (visible layers, basemap, camera) of the
+           * current view. This method returns a Promise which resolves with a
+           * new Slide instance once the slide as been successfully created.
+           *******************************************************************/
+          Slide.createFrom(view).then(function(slide) {
+            /*****************************************************************
+             * Set the slide title
+             *****************************************************************/
+            slide.title.text = document.getElementById("createSlideTitleInput").value;
+
+            /*****************************************************************
+             * Add the slide to the slides collection of the scene presentation
+             * such that if the scene were to published back to the portal, the
+             * newly created slide would be correctly persisted as part of the
+             * WebScene
+             *****************************************************************/
+            scene.presentation.slides.add(slide);
+
+            /*****************************************************************
+             * Create UI for the slide and present it to the user
+             *****************************************************************/
+            createSlideUI(slide, "first");
+          });
+        });
+      });
+
+    });
+    </script>
+    <!--
     <script>
       dojo.require("esri.map");
       var layer, map, visible = [];
@@ -69,8 +272,9 @@
       }
 
       dojo.ready(init);
-    </script>    
-    
+    </script>
+  -->
+
 </head>
 <body id="top">
 
@@ -103,14 +307,14 @@
         <li class="active"><a href="mnsvisual.html">M&S Visualizer</a></li>
         <li><a href="assignments.html">Assignments</a>
           <ul>
-            <li><a href="assignment1.html">Assignment 1</a></li>
-            <!--<li><a href="assignment2.html">Assignment 2</a></li>
-            <li><a href="assignment3.html">Assignment 3</a></li>
-            <li><a href="assignment4.html">Assignment 4</a></li>
-            <li><a href="assignment5.html">Assignment 5</a></li>
-            <li><a href="assignment6.html">Assignment 6</a></li>
-            <li><a href="assignment7.html">Assignment 7</a></li>
-            <li><a href="finalproject.html">Final Project</a></li>-->
+              <li><a href="assignment1.html">Assignment 1</a></li>
+              <li><a href="assignment2.html">Assignment 2</a></li>
+              <li><a href="assignment3.html">Assignment 3</a></li>
+              <li><a href="assignment4.html">Assignment 4</a></li>
+              <li><a href="assignment5.html">Assignment 5</a></li>
+              <li><a href="assignment6.html">Assignment 6</a></li>
+              <!--<li><a href="assignment7.html">Assignment 7</a></li>-->
+              <li><a href="mnsvisual.html">Final Project</a></li>
           </ul>
         </li>
         <li><a href="about.html">Profile</a></li>
@@ -122,22 +326,18 @@
 <!-- content -->
 <div class="wrapper row2">
   <div id="container" class="clear">
-    <h1><span style="font-family: Arial; font-size: xx-large; color: #000000;">Modeling and Simulation (M&S) Viewer (Placeholder) </span> - <a href="assignment/GEOG677_Syllabus_Winter2018-2019.pdf" download="GEOG677_Syllabus_Winter2018-2019.pdf" target="_blank">(See Instructions)</a></h1>
+    <h1><span style="font-family: Arial; font-size: xx-large; color: #000000;">Modeling and Simulation (M&S) Viewer </span></h1>
     <br>
-    <h2>Placeholder for Application Final Project</h2>
-    <!--
-    <h2>Part III: Publishing Map Services</h2>
-	    <p><a href="http://129.2.24.54:6080/arcgis/rest/services/GEOG677_W2013/GEOG677_PatrickLolaAmani_Lab3/MapServer?" target="_blank">Here is the link to the Map Services that we have created</a></p>
-	  <h2>Part IV: Consuming Map Services in Desktop GIS</h2>
-	    <p><a href="report/GEOG677_Patrick K Lola Amani_Assignment 3.pdf" download="GEOG677_Patrick K Lola Amani_Assignment 3.pdf" target="_blank">See the snapshot of the Map Document with services</a></p>
-	  <h2>Part V: Consuming Map Services in Web Applications</h2>
-	    <p>Check or uncheck the box to display or remove the layer from the map</p> <span id="layer_list"><input type='checkbox' class='list_item' id='0' value=0 onclick='updateLayerVisibility();'/>Maryland Highways  
-        <input type='checkbox' class='list_item' id='1' value=1 onclick='updateLayerVisibility();'/>Maryland Counties  
-        </span><br />
-        <br />
-      -->
-    <div id="map"></div>
-    
+    <h2>GIS M&S for Electronic Warfare</h2>
+    <h3>To get the <strong>full story</strong> on this map, check out the 
+      <a href="https://umdmpsgis.maps.arcgis.com/apps/Cascade/index.html?appid=567d9da5725e453e807020f8a6d1e8e0">Cascading Story Map</a> behind it!</h3>
+
+    <div id="viewDiv"></div>
+    <div id="createSlideDiv">
+       <!-- New slide: <input type="text" id="createSlideTitleInput" size="10" />
+        <button id="createSlideButton">Create</button>-->
+      </div>
+    <div id="slidesDiv"></div>
   </div>
 </div>
 <!-- footer -->

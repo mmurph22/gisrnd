@@ -40,10 +40,10 @@ address, article, aside, figcaption, figure, footer, header, hgroup, nav, sectio
 div.wrapper{display:block; width:100%; margin:0; padding:0; text-align:left;}
 
 .row0, .row0 a{color:#676767; background-color:#191919;}
-.row0{border-top:10px solid #FF9900;}
+.row0{border-top:10px solid #0088CC;}
 .row1, .row1 a{color:#C0BAB6; background-color:#333333;}
 .row2{color:#979797; background-color:#FFFFFF;}
-.row2 a{color:#FF9900; background-color:#FFFFFF;}
+.row2 a{color:#0088CC; background-color:#FFFFFF;}
 .row3, .row3 a{color:#FFFFFF; background-color:#1E1E1E;}
 
 /*----------------------------------------------Generalise-------------------------------------*/
@@ -119,5 +119,5 @@ footer p{margin:0; padding:20px 0;}
 .profileimg {
     padding:1px;
     border:1px solid #021a40;
-    background-color:#ff9900;
+    background-color:#0088CC;
  }
