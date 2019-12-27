@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <!--<meta charset="iso-8859-1">-->
+  <meta charset="utf-8"> 
+  <title>Lab 3</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css' rel='stylesheet' />
+
+  <link rel="stylesheet" href="css/layout.css" type="text/css">
+  <!--[if lt IE 9]><script src="js/html5shiv.js"></script><![endif]-->
+<!-- Task 1 -->
+<style>
+  body { margin:0; padding:0; }
+  #map { position:relative; top:0; bottom:0; width:900px; height: 600px;}
+</style>
+
+</head>
+<body id="top">
+<div class="wrapper row0">
+  <header id="topbar" class="clear">
+    <script type="text/javascript">
+      var currentDate = new Date()
+      var day = currentDate.getDate()
+      var month = currentDate.getMonth() + 1
+      var year = currentDate.getFullYear()
+      document.write("<b>Today, " + month + "/" + day + "/" + year + "</b>")
+    </script>
+  </header>
+</div>
+<div class="wrapper row1">
+  <header id="header" class="clear">
+    <hgroup>
+      <h1><a href="#">Michael P Murphy</a></h1>
+      <h2>Geog677 Portal</h2>
+    </hgroup>
+    <nav>
+      <ul>
+        <li><a href="mnsvisual.html">M&S Visualizer</a></li>
+        <li class="active"><a href="assignments.html">Assignments</a>
+          <ul>
+              <li><a href="assignment1.html">Assignment 1</a></li>
+              <li><a href="assignment2.html">Assignment 2</a></li>
+              <li><a href="assignment3.html">Assignment 3</a></li>
+              <li><a href="assignment4.html">Assignment 4</a></li>
+              <li><a href="assignment5.html">Assignment 5</a></li>
+              <li><a href="assignment6.html">Assignment 6</a></li>
+              <!--<li><a href="assignment7.html">Assignment 7</a></li>-->
+              <li><a href="mnsvisual.html">Final Project</a></li>
+          </ul>
+        </li>
+        <li><a href="about.html">Profile</a></li>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+<!-- content -->
+<div class="wrapper row2">
+  <div id="container" class="clear">
+    <h2> Lab 3</h2>
+      <!--<section class="services clear">-->
+        <article>
+        <h3> Task 1, Part 1: </h3>
+          <strong>Custom Style: <a href="https://api.mapbox.com/styles/v1/mmurph22/cjq2tz23i6vx02srqagdgnl7w.html?fresh=true&title=true&access_token=pk.eyJ1IjoibW11cnBoMjIiLCJhIjoiY2pxMnR3dmRkMWM2eDQzc3o4bjg4aHFneSJ9.0dpPmlQPa-KmpbBD4CH-_Q#14.3/39.995658/-83.005635/0">The Ohio State Buckeye</a> style.</strong>
+        <br />
+        <br />
+        <h3> Task 1, Part 2 and 3: Create a Map with Buckeye Style and Stadium Icon </h3>
+          <div id="map"></div>
+          <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoibW11cnBoMjIiLCJhIjoiY2pxMnR3dmRkMWM2eDQzc3o4bjg4aHFneSJ9.0dpPmlQPa-KmpbBD4CH-_Q';
+            var map = new mapboxgl.Map({
+                container: "map", // container id
+                style: 'mapbox://styles/mmurph22/cjq2tz23i6vx02srqagdgnl7w', // stylesheet location
+                center: [-83.025, 40], // starting position [lng, lat]
+                zoom: 14 // starting zoom
+            });
+
+            map.on('load', function() {
+                map.loadImage('img/osu_stadium.png', function(error, image) {
+                    if (error) throw error;
+                    map.addImage('osu', image);
+                    map.addLayer({
+                        "id": "points",
+                        "type": "symbol",
+                        "source": {
+                            "type": "geojson",
+                            "data": {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "type": "Feature",
+                                    "properties": { "Name":"Ohio Stadium"},
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [-83.01969051361084,40.00176376566704]
+                                    }
+                                }]
+                            }
+                        },
+                        "layout": {
+                            "icon-image": "osu",
+                            "icon-size": 0.50,
+                            "icon-anchor": "bottom-left"
+                        }
+                    });
+                });
+            });
+          </script>
+        </article>
+      <!--</section> -->   
+      <br /> 
+      <!--<section class="services clear">-->
+        <article>
+          <h3> Task 2: ArcGIS StoryMap</h3>
+          <br/>
+            <!--<strong>My Story: <a href="https://umdmpsgis.maps.arcgis.com/apps/MapTour/index.html?appid=6dd4b9c0091f48178faf9a11aee9dc79">Best Central Maryland Hiking Trails for All Ages</a></strong>-->
+          <strong>My Story: <a href="https://arcg.is/jSubq">Best Central Maryland Hiking Trails for All Ages</a></strong>
+        </article>
+      <!--</section>-->
+      <br /> 
+      <section class="services clear">
+      
+      
+      </section>
+      <br /> 
+    
+  </div>
+</div>
+<!-- footer -->
+<div class="wrapper row3">
+    <footer id="footer" class="clear">
+      <p class="fl_left">&copy; Michael P. Murphy, El-Pigadore Enterprises</p>
+    </footer>
+  </div>
+</body>
+</html>
